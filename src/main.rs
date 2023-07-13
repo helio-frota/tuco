@@ -9,11 +9,11 @@ const DISPLAY_WIDTH: i32 = 800;
 const DISPLAY_HEIGHT: i32 = 600;
 const RECT_THICKNESS: i32 = 5;
 
-enum GoldPosition { 
-    LeftTop, 
-    LeftBottom, 
-    RightTop, 
-    RightBottom 
+enum GoldPosition {
+    LeftTop,
+    LeftBottom,
+    RightTop,
+    RightBottom,
 }
 
 struct Player {
@@ -26,7 +26,46 @@ struct Player {
 
 fn rand_gold_position() -> i32 {
     let mut rng = rand::thread_rng();
-    return rng.gen_range(1..=4);
+    return rng.gen_range(0..=3);
+}
+
+fn basic_collision(x: i32, y: i32, gold_x: i32, gold_y: i32, width: i32, height: i32) -> bool {
+    if x + width < gold_x || x > gold_x + width || y + height < gold_y || y > gold_y + height {
+        return false;
+    }
+    return true;
+}
+
+fn collided(player: Player) -> bool {
+    return basic_collision(
+        player.x,
+        player.y,
+        DISPLAY_WIDTH - 850,
+        DISPLAY_HEIGHT - 550,
+        40,
+        40,
+    ) || basic_collision(
+        player.x,
+        player.y,
+        DISPLAY_WIDTH - 850,
+        DISPLAY_HEIGHT - 200,
+        40,
+        40,
+    ) || basic_collision(
+        player.x,
+        player.y,
+        DISPLAY_WIDTH - 150,
+        DISPLAY_HEIGHT - 550,
+        40,
+        40,
+    ) || basic_collision(
+        player.x,
+        player.y,
+        DISPLAY_WIDTH - 150,
+        DISPLAY_HEIGHT - 200,
+        40,
+        40,
+    );
 }
 
 allegro_main! {
