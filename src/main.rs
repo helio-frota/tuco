@@ -3,12 +3,37 @@ extern crate allegro_font;
 
 use allegro::*;
 use allegro_font::*;
+use rand::prelude::*;
+
+const DISPLAY_WIDTH: i32 = 800;
+const DISPLAY_HEIGHT: i32 = 600;
+const RECT_THICKNESS: i32 = 5;
+
+enum GoldPosition { 
+    LeftTop, 
+    LeftBottom, 
+    RightTop, 
+    RightBottom 
+}
+
+struct Player {
+    x: i32,
+    y: i32,
+    score: i32,
+    move_peed: i32,
+    steps: i32,
+}
+
+fn randGoldPosition() {
+    // probably 0,1,2,3 or 1,2,3,4
+}
+  
 
 allegro_main! {
     let core = Core::init().unwrap();
     let font_addon = FontAddon::init(&core).unwrap();
 
-    let display = Display::new(&core, 800, 600).unwrap();
+    let display = Display::new(&core, DISPLAY_WIDTH, DISPLAY_HEIGHT).unwrap();
     let timer = Timer::new(&core, 1.0 / 60.0).unwrap();
     let font = Font::new_builtin(&font_addon).unwrap();
 
