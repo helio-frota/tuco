@@ -3,7 +3,7 @@ extern crate allegro_font;
 
 use allegro::*;
 use allegro_font::*;
-use rand::prelude::*;
+use rand::Rng;
 
 const DISPLAY_WIDTH: i32 = 800;
 const DISPLAY_HEIGHT: i32 = 600;
@@ -24,10 +24,10 @@ struct Player {
     steps: i32,
 }
 
-fn randGoldPosition() {
-    // probably 0,1,2,3 or 1,2,3,4
+fn rand_gold_position() -> i32 {
+    let mut rng = rand::thread_rng();
+    return rng.gen_range(1..=4);
 }
-  
 
 allegro_main! {
     let core = Core::init().unwrap();
@@ -50,7 +50,7 @@ allegro_main! {
             core.clear_to_color(Color::from_rgb_f(0.0, 0.0, 0.0));
             core.draw_text(&font, Color::from_rgb_f(1.0, 1.0, 1.0),
                 (display.get_width() / 2) as f32, (display.get_height() / 2) as f32,
-                FontAlign::Centre, "Welcome to RustAllegro!");
+                FontAlign::Centre, &rand_gold_position().to_string());
             core.flip_display();
             redraw = false;
         }
