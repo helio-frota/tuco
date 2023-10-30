@@ -6,6 +6,8 @@
 
 ```console
 sudo dnf install allegro5-devel
+sudo dnf install allegro5-addon-ttf
+sudo dnf install allegro5-addon-ttf-devel
 ```
 
 ## Run

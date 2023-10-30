@@ -1,8 +1,10 @@
 extern crate allegro;
 extern crate allegro_font;
+extern crate allegro_ttf;
 
 use allegro::*;
 use allegro_font::*;
+use allegro_ttf::*;
 use rand::Rng;
 
 const DISPLAY_WIDTH: i32 = 800;
@@ -74,7 +76,9 @@ allegro_main! {
 
     let display = Display::new(&core, DISPLAY_WIDTH, DISPLAY_HEIGHT).unwrap();
     let timer = Timer::new(&core, 1.0 / 60.0).unwrap();
-    let font = Font::new_builtin(&font_addon).unwrap();
+
+    let ttf_addon = TtfAddon::init(&font_addon).unwrap();
+    let font = ttf_addon.load_ttf_font("OpenSans-Regular.ttf", 36, Flag::zero()).unwrap();
 
     let queue = EventQueue::new(&core).unwrap();
     queue.register_event_source(display.get_event_source());
@@ -82,7 +86,7 @@ allegro_main! {
 
     let mut redraw = true;
     timer.start();
-    'exit: loop {
+    'exit: loop{
         if redraw && queue.is_empty() {
             core.clear_to_color(Color::from_rgb_f(0.0, 0.0, 0.0));
             core.draw_text(&font, Color::from_rgb_f(1.0, 1.0, 1.0),

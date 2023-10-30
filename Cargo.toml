@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 allegro = "0.0.44"
 allegro_font = "0.0.44"
+allegro_ttf = "0.0.44"
 rand = "0.8.5"
 
 [[bin]]
