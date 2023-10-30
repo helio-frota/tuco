@@ -26,18 +26,18 @@ struct Player {
 
 fn rand_gold_position() -> i32 {
     let mut rng = rand::thread_rng();
-    return rng.gen_range(0..=3);
+    rng.gen_range(0..=3)
 }
 
 fn basic_collision(x: i32, y: i32, gold_x: i32, gold_y: i32, width: i32, height: i32) -> bool {
     if x + width < gold_x || x > gold_x + width || y + height < gold_y || y > gold_y + height {
         return false;
     }
-    return true;
+    true
 }
 
 fn collided(player: Player) -> bool {
-    return basic_collision(
+    basic_collision(
         player.x,
         player.y,
         DISPLAY_WIDTH - 850,
@@ -65,7 +65,7 @@ fn collided(player: Player) -> bool {
         DISPLAY_HEIGHT - 200,
         40,
         40,
-    );
+    )
 }
 
 allegro_main! {
@@ -82,10 +82,8 @@ allegro_main! {
 
     let mut redraw = true;
     timer.start();
-    'exit: loop
-    {
-        if redraw && queue.is_empty()
-        {
+    'exit: loop {
+        if redraw && queue.is_empty() {
             core.clear_to_color(Color::from_rgb_f(0.0, 0.0, 0.0));
             core.draw_text(&font, Color::from_rgb_f(1.0, 1.0, 1.0),
                 (display.get_width() / 2) as f32, (display.get_height() / 2) as f32,
@@ -94,8 +92,7 @@ allegro_main! {
             redraw = false;
         }
 
-        match queue.wait_for_event()
-        {
+        match queue.wait_for_event() {
             DisplayClose{..} => break 'exit,
             TimerTick{..} => redraw = true,
             _ => (),
