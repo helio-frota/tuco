@@ -107,7 +107,8 @@ allegro_main! {
     let timer = Timer::new(&core, 1.0 / 60.0).unwrap();
 
     // Loading our custom font from the disk.
-    let font = ttf_addon.load_ttf_font("OpenSans-Regular.ttf", 36, Flag::zero()).unwrap();
+    let font = ttf_addon.load_ttf_font("OpenSans-Regular.ttf",
+    36, Flag::zero()).unwrap();
 
     // Instantiating and registering all the sources that creates events.
     let eq = EventQueue::new(&core).unwrap();
@@ -117,20 +118,43 @@ allegro_main! {
     let mut redraw = true;
     timer.start();
 
-    let blue = Color::from_rgb_f(38.0, 139.0, 210.0);
     let dark_green = Color::from_rgb_f(0.0, 43.0, 54.0);
     let yellow = Color::from_rgb_f(181.0, 137.0, 0.0);
+    let black = Color::from_rgb_f(0.0, 0.0, 0.0);
 
     'exit: loop {
 
         if redraw && eq.is_empty() {
-            core.clear_to_color(Color::from_rgb_f(0.0, 0.0, 0.0));
-            core.draw_text(&font, Color::from_rgb_f(1.0, 1.0, 1.0),
+            core.clear_to_color(black);
+
+            core.draw_text(&font, yellow,
             (display.get_width() / 2) as f32, (display.get_height() / 2) as f32,
             FontAlign::Centre, &rand_gold_position().to_string());
 
-            core.draw_text(&font, blue, 10.0, 1.0, FontAlign::Left, "SCORE: 10");
-            primitives.draw_line(1.0, 50.0, (DISPLAY_WIDTH - 1) as f32, 50.0, blue, RECT_THICKNESS as f32);
+            core.draw_text(&font, dark_green,
+                10.0, 1.0, FontAlign::Left, "SCORE: 10");
+            core.draw_text(&font, dark_green,
+                ((DISPLAY_WIDTH / 2) - 150) as f32, 1.0,
+                FontAlign::Left, "STEPS: 10");
+            core.draw_text(&font, dark_green,
+                (DISPLAY_WIDTH - 360) as f32, 1.0,
+                FontAlign::Left, "TIME REMAINING: 10");
+            primitives.draw_line(1.0, 50.0,
+                (DISPLAY_WIDTH - 1) as f32, 50.0, dark_green,
+                RECT_THICKNESS as f32);
+
+            primitives.draw_rectangle(80.0, 140.0, 280.0, 340.0,
+                dark_green, RECT_THICKNESS as f32);
+            primitives.draw_rectangle(80.0, 480.0, 280.0, 680.0,
+                dark_green, RECT_THICKNESS as f32);
+
+            primitives.draw_rectangle((DISPLAY_WIDTH - 80) as f32,
+            140.0, (DISPLAY_WIDTH - 280) as f32,
+            340.0, dark_green, RECT_THICKNESS as f32);
+
+            primitives.draw_rectangle((DISPLAY_WIDTH - 80) as f32,
+            480.0, (DISPLAY_WIDTH - 280) as f32,
+            680.0, dark_green, RECT_THICKNESS as f32);
 
             core.flip_display();
             redraw = false;
