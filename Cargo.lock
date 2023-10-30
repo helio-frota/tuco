@@ -49,6 +49,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "allegro_primitives"
+version = "0.0.44"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "64fe31d45d93983cff866151cf39752fc9a1224d621227ab9155d6fa26446806"
+dependencies = [
+ "allegro",
+ "allegro-sys",
+ "allegro_primitives-sys",
+ "libc",
+]
+
+[[package]]
+name = "allegro_primitives-sys"
+version = "0.0.44"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "940e0da99aa94077180b581cb7d1befeebabc50bdcaf9ba982248733721bd4ee"
+dependencies = [
+ "allegro-sys",
+ "allegro_util",
+ "libc",
+]
+
+[[package]]
 name = "allegro_ttf"
 version = "0.0.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -153,6 +176,7 @@ version = "0.1.0"
 dependencies = [
  "allegro",
  "allegro_font",
+ "allegro_primitives",
  "allegro_ttf",
  "rand",
 ]
