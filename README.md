@@ -8,6 +8,8 @@
 sudo dnf install allegro5-devel
 sudo dnf install allegro5-addon-ttf
 sudo dnf install allegro5-addon-ttf-devel
+sudo dnf install allegro5-addon-audio-devel
+sudo dnf install allegro5-addon-acodec-devel
 ```
 
 ## Run

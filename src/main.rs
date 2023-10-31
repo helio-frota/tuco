@@ -1,10 +1,14 @@
 // Using the external dependencies.
 extern crate allegro;
+extern crate allegro_audio;
+extern crate allegro_acodec;
 extern crate allegro_font;
 extern crate allegro_primitives;
 extern crate allegro_ttf;
 
 use allegro::*;
+use allegro_audio::*;
+use allegro_acodec::*;
 use allegro_font::*;
 use allegro_primitives::*;
 use allegro_ttf::*;
@@ -91,14 +95,14 @@ fn collided(player: Player) -> bool {
 allegro_main! {
     // We need to init the allegro stuffs.
     let core = Core::init().unwrap();
-    // Things like draw_line and other primitives are part of PrimitivesAddon
     let primitives = PrimitivesAddon::init(&core).unwrap();
+    let font_addon = FontAddon::init(&core).unwrap();
+    let audio_addon = AudioAddon::init(&core).unwrap();
+    let ttf_addon = TtfAddon::init(&font_addon).unwrap();
+    AcodecAddon::init(&audio_addon).unwrap();
+
     // We need to install/register the keyboard to be able to use it.
     core.install_keyboard().unwrap();
-    // We need to init the font addon to be able to use it.
-    let font_addon = FontAddon::init(&core).unwrap();
-    // We need to init the TTF addon
-    let ttf_addon = TtfAddon::init(&font_addon).unwrap();
     // Instantiating a new display.
     let display = Display::new(&core, DISPLAY_WIDTH, DISPLAY_HEIGHT).unwrap();
     // Setting the window title (not sure if we need this for this game).
@@ -107,7 +111,7 @@ allegro_main! {
     let timer = Timer::new(&core, 1.0 / 60.0).unwrap();
 
     // Loading our custom font from the disk.
-    let font = ttf_addon.load_ttf_font("OpenSans-Regular.ttf",
+    let font = ttf_addon.load_ttf_font("fonts/OpenSans-Regular.ttf",
     36, Flag::zero()).unwrap();
 
     // Instantiating and registering all the sources that creates events.
@@ -117,6 +121,12 @@ allegro_main! {
 
     let mut redraw = true;
     timer.start();
+
+    // I'm not understanding this part of the sound...
+    // let sample = Sample::load(&audio_addon, "sounds/sound_gold.wav").unwrap();
+    // let mut sink = Sink::new(&audio_addon).unwrap();
+    // let mut stream = AudioStream::load(&audio_addon, "sounds/song_gold.wav").unwrap();
+	// stream.set_playmode(Playmode::Loop).unwrap();
 
     let dark_green = Color::from_rgb_f(0.0, 43.0, 54.0);
     let yellow = Color::from_rgb_f(181.0, 137.0, 0.0);

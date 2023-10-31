@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 allegro = "0.0.44"
+allegro_audio = "0.0.44"
+allegro_acodec = "0.0.44"
 allegro_font = "0.0.44"
 allegro_ttf = "0.0.44"
 allegro_primitives = "0.0.44"
