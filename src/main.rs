@@ -12,48 +12,18 @@ use allegro_audio::*;
 use allegro_font::*;
 use allegro_primitives::*;
 use allegro_ttf::*;
-use rand::Rng;
+use player::Player;
+use gold::GoldPosition;
+use core::*;
+
+mod player;
+mod gold;
+mod core;
 
 // Creating some constants to add a bit of meaning.
 const DISPLAY_WIDTH: i32 = 800;
 const DISPLAY_HEIGHT: i32 = 600;
 const RECT_THICKNESS: i32 = 5;
-
-// This enum represents the 4 possible positions of the gold in the game.
-enum GoldPosition {
-    LeftTop,
-    LeftBottom,
-    RightTop,
-    RightBottom,
-}
-
-// This struct represents the Player.
-struct Player {
-    x: i32,
-    y: i32,
-    score: i32,
-    move_speed: i32,
-    steps: i32,
-}
-
-/**
- * This function is used only to return a random number between 0 and 3
- * to be used as a gold position.
- */
-fn rand_gold_position() -> i32 {
-    let mut rng = rand::thread_rng();
-    rng.gen_range(0..=3)
-}
-
-/**
- * This is a very primitive and dumb collision check.
- */
-fn basic_collision(x: i32, y: i32, gold_x: i32, gold_y: i32, width: i32, height: i32) -> bool {
-    if x + width < gold_x || x > gold_x + width || y + height < gold_y || y > gold_y + height {
-        return false;
-    }
-    true
-}
 
 /**
  * This function is to check if the Player collided with the gold.
@@ -90,57 +60,6 @@ fn collided(player: Player) -> bool {
         40,
         40,
     )
-}
-
-fn gold_found_left_top(player: &Player, gold_position: i32) -> bool {
-    if (player.x > 150 && player.x < 200)
-        && (player.y > 200 && player.y < 250)
-        && gold_position == GoldPosition::LeftTop as i32
-    {
-        return true;
-    }
-    false
-}
-
-fn gold_found_left_bottom(player: &Player, gold_position: i32) -> bool {
-    if (player.x > 150 && player.x < 200)
-        && (player.y > 560 && player.y < 570)
-        && gold_position == GoldPosition::LeftBottom as i32
-    {
-        return true;
-    }
-    false
-}
-
-fn gold_found_right_top(player: &Player, gold_position: i32) -> bool {
-    if (player.x > 870 && player.x < 880)
-        && (player.y > 200 && player.y < 250)
-        && gold_position == GoldPosition::RightTop as i32
-    {
-        return true;
-    }
-    false
-}
-
-fn gold_found_right_bottom(player: &Player, gold_position: i32) -> bool {
-    if (player.x > 870 && player.x < 880)
-        && (player.y > 560 && player.y < 570)
-        && gold_position == GoldPosition::RightBottom as i32
-    {
-        return true;
-    }
-    false
-}
-
-fn gold_found(player: &Player, gold_position: i32) -> bool {
-    if gold_found_left_top(player, gold_position)
-        || gold_found_left_bottom(player, gold_position)
-        || gold_found_right_top(player, gold_position)
-        || gold_found_right_bottom(player, gold_position)
-    {
-        return true;
-    }
-    false
 }
 
 allegro_main! {
@@ -193,7 +112,7 @@ allegro_main! {
 
     let done = 0;
     let seconds = 60;
-    let gold_position = rand_gold_position();
+    let gold_position = GoldPosition::rand_gold_position();
 
     'exit: loop {
 
