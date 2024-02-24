@@ -13,11 +13,7 @@
 (install allegro-devel for fedora)
 
 ```console
-sudo dnf install allegro5-devel
-sudo dnf install allegro5-addon-ttf
-sudo dnf install allegro5-addon-ttf-devel
-sudo dnf install allegro5-addon-audio-devel
-sudo dnf install allegro5-addon-acodec-devel
+sudo dnf install allegro5-devel allegro5-addon-ttf allegro5-addon-ttf-devel allegro5-addon-audio-devel allegro5-addon-acodec-devel
 ```
 
 ## Run
