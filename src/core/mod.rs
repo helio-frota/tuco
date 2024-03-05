@@ -1,11 +1,22 @@
-use crate::player::Player;
 use crate::gold::GoldPosition;
+use crate::player::Player;
 
 /**
  * This is a very primitive and dumb collision check.
  */
-pub fn basic_collision(x: i32, y: i32, gold_x: i32, gold_y: i32, width: i32, height: i32) -> bool {
-    if x + width < gold_x || x > gold_x + width || y + height < gold_y || y > gold_y + height {
+pub fn basic_collision(
+    x: i32,
+    y: i32,
+    gold_x: i32,
+    gold_y: i32,
+    width: i32,
+    height: i32,
+) -> bool {
+    if x + width < gold_x
+        || x > gold_x + width
+        || y + height < gold_y
+        || y > gold_y + height
+    {
         return false;
     }
     true

@@ -4,13 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-allegro = "0.0.44"
-allegro_audio = "0.0.44"
-allegro_acodec = "0.0.44"
-allegro_font = "0.0.44"
-allegro_ttf = "0.0.44"
-allegro_primitives = "0.0.44"
 rand = "0.8.5"
+ratatui = "0.26.1"
+crossterm = "0.27.0"
 
 [[bin]]
 name = "rgold"
