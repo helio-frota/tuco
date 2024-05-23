@@ -6,10 +6,10 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new(display_width: f64, display_height: f64) -> Player {
+    pub fn new(x: f64, y: f64) -> Player {
         Player {
-            x: display_width / 2.0,
-            y: display_height / 2.0,
+            x: x / 2.0,
+            y: y / 2.0,
             score: 0,
             steps: 0,
         }

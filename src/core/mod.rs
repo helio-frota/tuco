@@ -1,9 +1,7 @@
 use crate::gold::GoldPosition;
 use crate::player::Player;
 
-/**
- * This is a very primitive and dumb collision check.
- */
+// This is a very primitive and dumb collision check.
 pub fn basic_collision(
     x: i32,
     y: i32,
@@ -25,7 +23,7 @@ pub fn basic_collision(
 fn gold_found_left_top(player: &Player, gold_position: i32) -> bool {
     if (player.x > 150 && player.x < 200)
         && (player.y > 200 && player.y < 250)
-        && gold_position == GoldPosition::LeftTop as i32
+        && gold_position == GoldPosition::LeftTop
     {
         return true;
     }
@@ -35,7 +33,7 @@ fn gold_found_left_top(player: &Player, gold_position: i32) -> bool {
 fn gold_found_left_bottom(player: &Player, gold_position: i32) -> bool {
     if (player.x > 150 && player.x < 200)
         && (player.y > 560 && player.y < 570)
-        && gold_position == GoldPosition::LeftBottom as i32
+        && gold_position == GoldPosition::LeftBottom
     {
         return true;
     }
@@ -45,7 +43,7 @@ fn gold_found_left_bottom(player: &Player, gold_position: i32) -> bool {
 fn gold_found_right_top(player: &Player, gold_position: i32) -> bool {
     if (player.x > 870 && player.x < 880)
         && (player.y > 200 && player.y < 250)
-        && gold_position == GoldPosition::RightTop as i32
+        && gold_position == GoldPosition::RightTop
     {
         return true;
     }
@@ -55,7 +53,7 @@ fn gold_found_right_top(player: &Player, gold_position: i32) -> bool {
 fn gold_found_right_bottom(player: &Player, gold_position: i32) -> bool {
     if (player.x > 870 && player.x < 880)
         && (player.y > 560 && player.y < 570)
-        && gold_position == GoldPosition::RightBottom as i32
+        && gold_position == GoldPosition::RightBottom
     {
         return true;
     }

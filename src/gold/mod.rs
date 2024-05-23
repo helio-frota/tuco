@@ -1,4 +1,5 @@
 use rand::Rng;
+
 pub enum GoldPosition {
     LeftTop,
     LeftBottom,
