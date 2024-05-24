@@ -47,6 +47,7 @@ fn restore_terminal() -> io::Result<()> {
 fn main() -> io::Result<()> {
     let mut terminal = init_terminal()?;
 
+    let count:i8 = 60;
     let mut p = Player::new(0.0, 0.0);
 
     // ----------
@@ -62,31 +63,23 @@ fn main() -> io::Result<()> {
                 .paint(|ctx| {
                     ctx.draw(&Line {
                         x1: -150.0,
-                        y1: 90.0,
+                        y1: 75.0,
                         x2: 150.0,
-                        y2: 90.0,
+                        y2: 75.0,
                         color: Color::Cyan,
                     });
 
                     ctx.layer();
 
-                    ctx.print(
-                        (area.width / 2) as f64,
-                        (area.height / 2) as f64,
-                        area.width.to_string(),
-                    );
-
-                    ctx.print(
-                        (area.width / 2 + 50) as f64,
-                        (area.height / 2 + 50) as f64,
-                        p.steps.to_string(),
-                    );
+                    ctx.print(-150.0, 80.0, format!("SCORE: {}", p.score));
+                    ctx.print(-30.0, 80.0, format!("STEPS: {}", p.steps));
+                    ctx.print(75.0, 80.0, format!("TIME REMAINING: {}", count));
                 });
 
             frame.render_widget(the_canvas, area);
         })?;
 
-        if event::poll(Duration::from_millis(16))? {
+        if event::poll(Duration::from_millis(250))? {
             if let Key(ke) = event::read()? {
                 if ke.code == KeyCode::Char('q') || ke.code == KeyCode::Esc {
                     break;

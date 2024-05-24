@@ -6,6 +6,9 @@
 cargo run
 ```
 
-current status
+* type 'h'
+* type 'q' or 'ESC' to quit
+
+Current status
 
 ![current status](status.png)
