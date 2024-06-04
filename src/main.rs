@@ -47,7 +47,7 @@ fn restore_terminal() -> io::Result<()> {
 fn main() -> io::Result<()> {
     let mut terminal = init_terminal()?;
 
-    let count:i8 = 60;
+    let count: i8 = 60;
     let mut p = Player::new(0.0, 0.0);
 
     // ----------
@@ -83,7 +83,7 @@ fn main() -> io::Result<()> {
             if let Key(ke) = event::read()? {
                 if ke.code == KeyCode::Char('q') || ke.code == KeyCode::Esc {
                     break;
-                } else if ke.code == KeyCode::Char('h')  {
+                } else if ke.code == KeyCode::Char('h') {
                     p.steps += 1;
                 }
             }
