@@ -11,5 +11,5 @@ cargo run
 
 Current status
 
-![current status](status.png)
 
+![current status](status.png)
