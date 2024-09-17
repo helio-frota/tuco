@@ -54,7 +54,7 @@ fn main() -> io::Result<()> {
     // the game loop
     loop {
         terminal.draw(|frame| {
-            let area = frame.size();
+            let area = frame.area();
 
             let the_canvas = Canvas::default()
                 .marker(Marker::Bar)
