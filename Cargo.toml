@@ -4,8 +4,6 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
-bevy = "0.14"
-
-[[bin]]
-name = "rgold"
-path = "src/main.rs"
+macroquad = "0.4"
+color-eyre = "0.6"
+rand = "0.8"

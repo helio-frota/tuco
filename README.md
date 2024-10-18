@@ -1,14 +1,6 @@
 # rgold
 
-## Dependencies
-
-https://github.com/bevyengine/bevy/blob/latest/docs/linux_dependencies.md#fedora
-
-and had to install this to build
-
-```
-sudo dnf install 'pkgconfig(libudev)'
-```
+Rust version of [a game I made years ago](https://github.com/helio-frota/ecstasy-of-gold)
 
 ## Run
 
@@ -16,3 +8,4 @@ sudo dnf install 'pkgconfig(libudev)'
 cargo run
 ```
 
+![current status](./status.png)
