@@ -1,5 +1,5 @@
 use color_eyre::Result;
-use macroquad::{audio, prelude::*, time};
+use macroquad::{audio, prelude::*};
 use player::Player;
 
 extern crate rand;
@@ -7,6 +7,7 @@ use rand::Rng;
 
 mod player;
 
+// Util functions
 fn rand_gold_position() -> u32 {
     let mut rng = rand::thread_rng();
     rng.gen_range(0..=3)
@@ -14,29 +15,35 @@ fn rand_gold_position() -> u32 {
 
 #[macroquad::main("rgold")]
 async fn main() -> Result<()> {
+    // Window
     set_fullscreen(false);
     let width = 800.;
     let height = 600.;
     request_new_screen_size(width, height);
+
+    // Assets
     set_pc_assets_folder("resources");
     let font = load_ttf_font("fonts/OpenSans-Regular.ttf").await?;
     let gold_sound = audio::load_sound("sounds/gold.wav").await?;
+    let font_size = 20.0;
 
+    // The colors
     let blue = Color::from_rgba(38, 139, 210, 255);
     let dark_green = Color::from_rgba(0, 43, 54, 255);
     let yellow = Color::from_rgba(181, 137, 0, 255);
 
-    let mut player = Player::new((width / 2.0) - 20.0, height / 2.0);
+    // Time and speed initial settings
+    let mut last_update = get_time();
+    let mut nav_lock = false;
+    let speed = 0.1;
+    let mut counter = get_time();
+    let mut count: f64 = 10.0;
 
+    // Player and gold initial settings
+    let mut p = Player::new((width / 2.0) - 20.0, height / 2.0);
     let move_length = 20.0;
     let mut gold_position = rand_gold_position();
 
-    let mut last_update = get_time();
-    let mut navigation_lock = false;
-    let speed = 0.1;
-
-    let mut counter = get_time();
-    let mut count: f64 = 60.0;
     let mut game_over = false;
 
     loop {
@@ -44,7 +51,7 @@ async fn main() -> Result<()> {
             clear_background(dark_green);
 
             draw_text_ex(
-                format!("SCORE: {}", player.score).as_str(),
+                format!("SCORE: {}", p.score).as_str(),
                 10.0,
                 20.0,
                 TextParams {
@@ -56,7 +63,7 @@ async fn main() -> Result<()> {
             );
 
             draw_text_ex(
-                format!("STEPS: {}", player.steps).as_str(),
+                format!("STEPS: {}", p.steps).as_str(),
                 (width / 2.0) - 60.0,
                 20.0,
                 TextParams {
@@ -102,8 +109,8 @@ async fn main() -> Result<()> {
 
             draw_text_ex(
                 "X",
-                player.x,
-                player.y,
+                p.x,
+                p.y,
                 TextParams {
                     font_size: 40,
                     font: Some(&font),
@@ -132,41 +139,38 @@ async fn main() -> Result<()> {
                 _ => warn!(":D"),
             }
 
-            if is_key_down(KeyCode::H) && player.x > 18.0 && !navigation_lock {
-                player.steps += 1;
-                player.x -= move_length;
-                navigation_lock = true;
+            if is_key_down(KeyCode::H) && p.x > 18.0 && !nav_lock {
+                p.steps += 1;
+                p.x -= move_length;
+                nav_lock = true;
                 audio::play_sound_once(&gold_sound);
                 // gold_position = rand_gold_position();
             } else if is_key_down(KeyCode::L)
-                && player.x < (width - 38.0)
-                && !navigation_lock
+                && p.x < (width - 38.0)
+                && !nav_lock
             {
-                player.steps += 1;
-                player.x += move_length;
-                navigation_lock = true;
+                p.steps += 1;
+                p.x += move_length;
+                nav_lock = true;
                 // gold_position = rand_gold_position();
             } else if is_key_down(KeyCode::J)
-                && player.y < (height - 10.0)
-                && !navigation_lock
+                && p.y < (height - 10.0)
+                && !nav_lock
             {
-                player.steps += 1;
-                player.y += move_length;
-                navigation_lock = true;
+                p.steps += 1;
+                p.y += move_length;
+                nav_lock = true;
                 // gold_position = rand_gold_position();
-            } else if is_key_down(KeyCode::K)
-                && player.y > 60.0
-                && !navigation_lock
-            {
-                player.steps += 1;
-                player.y -= move_length;
-                navigation_lock = true;
+            } else if is_key_down(KeyCode::K) && p.y > 60.0 && !nav_lock {
+                p.steps += 1;
+                p.y -= move_length;
+                nav_lock = true;
                 // gold_position = rand_gold_position();
             }
 
             if get_time() - last_update > speed {
                 last_update = get_time();
-                navigation_lock = false;
+                nav_lock = false;
             }
 
             if get_time() - counter > 1.0 {
@@ -177,9 +181,11 @@ async fn main() -> Result<()> {
                 }
             }
         } else {
+            let text_size =
+                measure_text("GAME OVER", None, font_size as _, 1.0);
             draw_text(
                 "GAME OVER",
-                width / 2.0,
+                width / 2.0 - text_size.width,
                 height / 2.0,
                 50.0,
                 DARKGRAY,
