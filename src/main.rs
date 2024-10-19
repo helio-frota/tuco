@@ -1,5 +1,5 @@
 use color_eyre::Result;
-use macroquad::{audio, prelude::*};
+use macroquad::{audio::{self, PlaySoundParams}, prelude::*};
 use player::Player;
 
 extern crate rand;
@@ -25,6 +25,7 @@ async fn main() -> Result<()> {
     set_pc_assets_folder("resources");
     let font = load_ttf_font("fonts/OpenSans-Regular.ttf").await?;
     let gold_sound = audio::load_sound("sounds/gold.wav").await?;
+    let music = audio::load_sound("sounds/music.wav").await?;
     let font_size = 20.0;
 
     // The colors
@@ -45,6 +46,12 @@ async fn main() -> Result<()> {
     let mut gold_position = rand_gold_position();
 
     let mut game_over = false;
+
+    let music_params = PlaySoundParams {
+        looped: true,
+        volume: 1.0,
+    };
+    audio::play_sound(&music, music_params);
 
     loop {
         if !game_over {
@@ -181,6 +188,7 @@ async fn main() -> Result<()> {
                 }
             }
         } else {
+            audio::stop_sound(&music);
             let text_size =
                 measure_text("GAME OVER", None, font_size as _, 1.0);
             draw_text(
