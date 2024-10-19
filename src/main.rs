@@ -1,11 +1,29 @@
 use color_eyre::Result;
-use macroquad::{audio::{self, PlaySoundParams}, prelude::*};
-use player::Player;
+use macroquad::{
+    audio::{self, PlaySoundParams},
+    prelude::*,
+};
 
 extern crate rand;
 use rand::Rng;
 
-mod player;
+struct Player {
+    x: f32,
+    y: f32,
+    score: i16,
+    steps: i16,
+}
+
+impl Player {
+    fn new(x: f32, y: f32) -> Player {
+        Player {
+            x,
+            y,
+            score: 0,
+            steps: 0,
+        }
+    }
+}
 
 // Util functions
 fn rand_gold_position() -> u32 {
