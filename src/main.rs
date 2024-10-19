@@ -1,4 +1,4 @@
-use color_eyre::Result;
+use anyhow::Result;
 use macroquad::{
     audio::{self, PlaySoundParams},
     prelude::*,
@@ -7,6 +7,7 @@ use macroquad::{
 extern crate rand;
 use rand::Rng;
 
+#[derive(Clone)]
 struct Player {
     x: f32,
     y: f32,
@@ -25,10 +26,46 @@ impl Player {
     }
 }
 
-// Util functions
-fn rand_gold_position() -> u32 {
+const LEFT_TOP: u8 = 0;
+const LEFT_BOTTOM: u8 = 1;
+const RIGHT_TOP: u8 = 2;
+const RIGHT_BOTTOM: u8 = 3;
+
+fn rand_gold_position() -> u8 {
     let mut rng = rand::thread_rng();
-    rng.gen_range(0..=3)
+    rng.gen_range(0..=3) as u8
+}
+
+fn basic_collision(
+    x: f32,
+    y: f32,
+    gold_x: f32,
+    gold_y: f32,
+    width: f32,
+    height: f32,
+) -> bool {
+    if x + width < gold_x
+        || x > gold_x + width
+        || y + height < gold_y
+        || y > gold_y + height
+    {
+        return true;
+    }
+    false
+}
+
+fn went_to_gold_location(p: &Player, width: f32, height: f32) -> bool {
+    basic_collision(p.x, p.y, width - 850., height - 550., 40., 40.)
+        || basic_collision(p.x, p.y, width - 850., height - 200., 40., 40.)
+        || basic_collision(p.x, p.y, width - 150., height - 550., 40., 40.)
+        || basic_collision(p.x, p.y, width - 150., height - 200., 40., 40.)
+}
+
+fn gold_found(p: &Player, gold_position: u8) -> bool {
+    (p.x == 140. && p.y == 160.0 && gold_position == LEFT_TOP)
+        || (p.x == 120. && p.y == 500. && gold_position == LEFT_BOTTOM)
+        || (p.x == 640. && p.y == 160. && gold_position == RIGHT_TOP)
+        || (p.x == 640. && p.y == 500. && gold_position == RIGHT_BOTTOM)
 }
 
 #[macroquad::main("rgold")]
@@ -44,7 +81,7 @@ async fn main() -> Result<()> {
     let font = load_ttf_font("fonts/OpenSans-Regular.ttf").await?;
     let gold_sound = audio::load_sound("sounds/gold.wav").await?;
     let music = audio::load_sound("sounds/music.wav").await?;
-    let font_size = 20.0;
+    const FONT_SIZE: u16 = 20;
 
     // The colors
     let blue = Color::from_rgba(38, 139, 210, 255);
@@ -56,18 +93,18 @@ async fn main() -> Result<()> {
     let mut nav_lock = false;
     let speed = 0.1;
     let mut counter = get_time();
-    let mut count: f64 = 10.0;
+    let mut count: f64 = 60.;
 
     // Player and gold initial settings
-    let mut p = Player::new((width / 2.0) - 20.0, height / 2.0);
-    let move_length = 20.0;
+    let mut p = Player::new((width / 2.) - 20., height / 2.);
+    let move_length = 20.;
     let mut gold_position = rand_gold_position();
 
     let mut game_over = false;
 
     let music_params = PlaySoundParams {
         looped: true,
-        volume: 1.0,
+        volume: 1.,
     };
     audio::play_sound(&music, music_params);
 
@@ -77,10 +114,10 @@ async fn main() -> Result<()> {
 
             draw_text_ex(
                 format!("SCORE: {}", p.score).as_str(),
-                10.0,
-                20.0,
+                10.,
+                20.,
                 TextParams {
-                    font_size: 20,
+                    font_size: FONT_SIZE,
                     font: Some(&font),
                     color: blue,
                     ..Default::default()
@@ -89,10 +126,10 @@ async fn main() -> Result<()> {
 
             draw_text_ex(
                 format!("STEPS: {}", p.steps).as_str(),
-                (width / 2.0) - 60.0,
-                20.0,
+                (width / 2.) - 60.,
+                20.,
                 TextParams {
-                    font_size: 20,
+                    font_size: FONT_SIZE,
                     font: Some(&font),
                     color: blue,
                     ..Default::default()
@@ -101,34 +138,34 @@ async fn main() -> Result<()> {
 
             draw_text_ex(
                 format!("TIME REMAINING: {}", count).as_str(),
-                width - 200.0,
-                20.0,
+                width - 200.,
+                20.,
                 TextParams {
-                    font_size: 20,
+                    font_size: FONT_SIZE,
                     font: Some(&font),
                     color: blue,
                     ..Default::default()
                 },
             );
 
-            draw_line(1.0, 30.0, width - 1.0, 30.0, 5.0, blue);
+            draw_line(1., 30., width - 1., 30., 5., blue);
 
-            draw_rectangle_lines(40.0, 70.0, 200.0, 170.0, 10.0, blue);
-            draw_rectangle_lines(40.0, 390.0, 200.0, 170.0, 10.0, blue);
+            draw_rectangle_lines(40., 70., 200., 170., 10., blue);
+            draw_rectangle_lines(40., 390., 200., 170., 10., blue);
             draw_rectangle_lines(
-                (width / 2.0) + 160.0,
-                70.0,
-                200.0,
-                170.0,
-                10.0,
+                (width / 2.) + 160.,
+                70.,
+                200.,
+                170.,
+                10.,
                 blue,
             );
             draw_rectangle_lines(
-                (width / 2.0) + 160.0,
-                390.0,
-                200.0,
-                170.0,
-                10.0,
+                (width / 2.) + 160.,
+                390.,
+                200.,
+                170.,
+                10.,
                 blue,
             );
 
@@ -145,52 +182,67 @@ async fn main() -> Result<()> {
             );
 
             match gold_position {
-                0 => draw_rectangle(120.0, 130.0, 40.0, 40.0, yellow), // left_top
-                1 => draw_rectangle(120.0, 460.0, 40.0, 40.0, yellow), // left bottom
-                2 => draw_rectangle(
-                    (width / 2.0) + 240.0,
-                    130.0,
-                    40.0,
-                    40.0,
-                    yellow,
-                ), // right top
-                3 => draw_rectangle(
-                    (width / 2.0) + 240.0,
-                    460.0,
-                    40.0,
-                    40.0,
-                    yellow,
-                ), // right bottom
+                0 => draw_rectangle(120., 130., 40., 40., yellow), // left_top
+                1 => draw_rectangle(120., 460., 40., 40., yellow), // left bottom
+                2 => {
+                    draw_rectangle((width / 2.) + 240., 130., 40., 40., yellow)
+                } // right top
+                3 => {
+                    draw_rectangle((width / 2.) + 240., 460., 40., 40., yellow)
+                } // right bottom
                 _ => warn!(":D"),
             }
 
-            if is_key_down(KeyCode::H) && p.x > 18.0 && !nav_lock {
+            if is_key_down(KeyCode::H) && p.x > 18. && !nav_lock {
                 p.steps += 1;
                 p.x -= move_length;
                 nav_lock = true;
-                audio::play_sound_once(&gold_sound);
-                // gold_position = rand_gold_position();
+                if went_to_gold_location(&p, width, height)
+                    && gold_found(&p, gold_position)
+                {
+                    audio::play_sound_once(&gold_sound);
+                    p.score += 1;
+                    gold_position = rand_gold_position();
+                }
             } else if is_key_down(KeyCode::L)
-                && p.x < (width - 38.0)
+                && p.x < (width - 38.)
                 && !nav_lock
             {
                 p.steps += 1;
                 p.x += move_length;
                 nav_lock = true;
-                // gold_position = rand_gold_position();
+                if went_to_gold_location(&p, width, height)
+                    && gold_found(&p, gold_position)
+                {
+                    audio::play_sound_once(&gold_sound);
+                    p.score += 1;
+                    gold_position = rand_gold_position();
+                }
             } else if is_key_down(KeyCode::J)
-                && p.y < (height - 10.0)
+                && p.y < (height - 10.)
                 && !nav_lock
             {
                 p.steps += 1;
                 p.y += move_length;
                 nav_lock = true;
-                // gold_position = rand_gold_position();
-            } else if is_key_down(KeyCode::K) && p.y > 60.0 && !nav_lock {
+                if went_to_gold_location(&p, width, height)
+                    && gold_found(&p, gold_position)
+                {
+                    audio::play_sound_once(&gold_sound);
+                    p.score += 1;
+                    gold_position = rand_gold_position();
+                }
+            } else if is_key_down(KeyCode::K) && p.y > 60. && !nav_lock {
                 p.steps += 1;
                 p.y -= move_length;
                 nav_lock = true;
-                // gold_position = rand_gold_position();
+                if went_to_gold_location(&p, width, height)
+                    && gold_found(&p, gold_position)
+                {
+                    audio::play_sound_once(&gold_sound);
+                    p.score += 1;
+                    gold_position = rand_gold_position();
+                }
             }
 
             if get_time() - last_update > speed {
@@ -198,22 +250,21 @@ async fn main() -> Result<()> {
                 nav_lock = false;
             }
 
-            if get_time() - counter > 1.0 {
+            if get_time() - counter > 1. {
                 counter = get_time();
-                count -= 1.0;
-                if count == 0.0 {
+                count -= 1.;
+                if count == 0. {
                     game_over = true;
                 }
             }
         } else {
             audio::stop_sound(&music);
-            let text_size =
-                measure_text("GAME OVER", None, font_size as _, 1.0);
+            let text_size = measure_text("GAME OVER", None, FONT_SIZE as _, 1.);
             draw_text(
                 "GAME OVER",
-                width / 2.0 - text_size.width,
-                height / 2.0,
-                50.0,
+                width / 2. - text_size.width,
+                height / 2.,
+                50.,
                 DARKGRAY,
             );
         }

@@ -5,5 +5,5 @@ edition = "2021"
 
 [dependencies]
 macroquad = { version = "0.4", features = ["audio"] }
-color-eyre = "0.6"
+anyhow = "1"
 rand = "0.8"
