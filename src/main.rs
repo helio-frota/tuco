@@ -68,7 +68,7 @@ fn gold_found(p: &Player, gold_position: u8) -> bool {
         || (p.x == 640. && p.y == 500. && gold_position == RIGHT_BOTTOM)
 }
 
-#[macroquad::main("rgold")]
+#[macroquad::main("tuco")]
 async fn main() -> Result<()> {
     // Window
     set_fullscreen(false);
