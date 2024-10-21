@@ -8,6 +8,6 @@ Rust version of [a game I made years ago](https://github.com/helio-frota/ecstasy
 cargo run
 ```
 
-![status](./status.png)
+![status](./1.png)
 
-![status2](./status2.png)
+![status2](./2.png)

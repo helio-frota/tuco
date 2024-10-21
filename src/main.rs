@@ -4,9 +4,6 @@ use macroquad::{
     prelude::*,
 };
 
-extern crate rand;
-use rand::Rng;
-
 #[derive(Clone)]
 struct Player {
     x: f32,
@@ -32,8 +29,7 @@ const RIGHT_TOP: u8 = 2;
 const RIGHT_BOTTOM: u8 = 3;
 
 fn rand_gold_position() -> u8 {
-    let mut rng = rand::thread_rng();
-    rng.gen_range(0..=3) as u8
+    rand::gen_range(0, 3)
 }
 
 fn basic_collision(
