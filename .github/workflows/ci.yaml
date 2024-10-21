@@ -28,6 +28,7 @@ jobs:
           mkdir -p ./deploy
           cp ./target/wasm32-unknown-unknown/release/tuco.wasm ./deploy/
           cp index.html ./deploy/
+          cp -R resources ./deploy/
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
