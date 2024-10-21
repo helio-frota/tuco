@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: rustup target add wasm32-unknown-unknown
       - uses: Swatinem/rust-cache@v2
+      - run: rustup target add wasm32-unknown-unknown
       - name: Format
         run: cargo fmt --check
       - name: Check
