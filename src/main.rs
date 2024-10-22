@@ -256,7 +256,8 @@ async fn main() -> Result<()> {
         } else {
             audio::stop_sound(&music);
             let rank = format!("SCORE: {} STEPS: {}", p.score, p.steps);
-            let rank_size = measure_text(rank.as_str(), None, FONT_SIZE as _, 1.);
+            let rank_size =
+                measure_text(rank.as_str(), None, FONT_SIZE as _, 1.);
             let text_size = measure_text("GAME OVER", None, FONT_SIZE as _, 1.);
             draw_text(
                 rank.as_str(),
