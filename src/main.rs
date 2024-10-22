@@ -178,14 +178,14 @@ async fn main() -> Result<()> {
             );
 
             match gold_position {
-                0 => draw_rectangle(120., 130., 40., 40., yellow), // left_top
-                1 => draw_rectangle(120., 460., 40., 40., yellow), // left bottom
-                2 => {
+                LEFT_TOP => draw_rectangle(120., 130., 40., 40., yellow),
+                LEFT_BOTTOM => draw_rectangle(120., 460., 40., 40., yellow),
+                RIGHT_TOP => {
                     draw_rectangle((width / 2.) + 240., 130., 40., 40., yellow)
-                } // right top
-                3 => {
+                }
+                RIGHT_BOTTOM => {
                     draw_rectangle((width / 2.) + 240., 460., 40., 40., yellow)
-                } // right bottom
+                }
                 _ => warn!(":D"),
             }
 
@@ -255,7 +255,16 @@ async fn main() -> Result<()> {
             }
         } else {
             audio::stop_sound(&music);
+            let rank = format!("SCORE: {} STEPS: {}", p.score, p.steps);
+            let rank_size = measure_text(rank.as_str(), None, FONT_SIZE as _, 1.);
             let text_size = measure_text("GAME OVER", None, FONT_SIZE as _, 1.);
+            draw_text(
+                rank.as_str(),
+                width / 2. - rank_size.width,
+                height / 2. + 50.,
+                50.,
+                DARKGRAY,
+            );
             draw_text(
                 "GAME OVER",
                 width / 2. - text_size.width,
